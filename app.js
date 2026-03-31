@@ -208,7 +208,7 @@ function renderView(view) {
 }
 
 // --- Build DOM helper ------------------------------------
-function el(tag, cls, html) {
+function mkEl(tag, cls, html) {
   const e = document.createElement(tag);
   if (cls) e.className = cls;
   if (html !== undefined) e.innerHTML = html;
@@ -318,7 +318,7 @@ function renderDashboard() {
   const dueCount = getDueCards(null).length;
   const today = getToday();
 
-  const wrap = el('div', 'fade-in');
+  const wrap = mkEl('div', 'fade-in');
   wrap.innerHTML = `
     <div class="section-header">
       <h1 class="section-title"><span class="jp">おかえり！</span> Welcome Back</h1>
@@ -440,7 +440,7 @@ function getDayProgress() {
 // --- CURRICULUM -----------------------------------------
 function renderCurriculum() {
   const today = getToday();
-  const wrap = el('div', 'fade-in');
+  const wrap = mkEl('div', 'fade-in');
 
   const reviewedPhraseIds = new Set(
     Object.values(state.cards)
@@ -522,7 +522,7 @@ function renderCurriculum() {
 
 // --- FLASHCARDS -----------------------------------------
 function renderFlashcards() {
-  const wrap = el('div', 'fade-in');
+  const wrap = mkEl('div', 'fade-in');
   const dueCount = getDueCards(state.deck).length;
 
   if (state.dueQueue.length === 0 || state.currentCardIndex >= state.dueQueue.length) {
@@ -727,7 +727,7 @@ function pickMCOptions(correct) {
 
 function renderQuiz() {
   const qs = state.quizState;
-  const wrap = el('div', 'fade-in');
+  const wrap = mkEl('div', 'fade-in');
 
   // Session complete
   if (qs.current >= qs.total) {
@@ -968,7 +968,7 @@ function speakJapanese(text) {
 
 // --- KANA TABLES ----------------------------------------
 function renderKana() {
-  const wrap = el('div', 'fade-in');
+  const wrap = mkEl('div', 'fade-in');
 
   const buildGrid = (data) => {
     return data.map(item => `
@@ -1054,7 +1054,7 @@ function renderKana() {
 
 // --- QUICK REFERENCE ------------------------------------
 function renderReference() {
-  const wrap = el('div', 'fade-in');
+  const wrap = mkEl('div', 'fade-in');
 
   const filtered = PHRASES.filter(p => {
     const matchCat = state.refCategory === 'all' || p.category === state.refCategory;
@@ -1174,7 +1174,7 @@ function rerenderPhraseList(wrap) {
 
 // --- CITIES ---------------------------------------------
 function renderCities() {
-  const wrap = el('div', 'fade-in');
+  const wrap = mkEl('div', 'fade-in');
 
   const cityConfig = [
     { key: 'tokyo',  nameJp: '東京', nameEn: 'Tokyo',  cls: 'tokyo', romaji: 'TOUKYOU' },
@@ -1218,7 +1218,7 @@ function showToast(message, type = 'info') {
   const container = document.getElementById('toastContainer');
   if (!container) return;
 
-  const toast = el('div', `toast ${type}`);
+  const toast = mkEl('div', `toast ${type}`);
   toast.innerHTML = `<span class="toast-icon">${icons[type] || 'ℹ'}</span>${escHtml(message)}`;
   container.appendChild(toast);
 
@@ -1257,12 +1257,12 @@ function setupNav() {
 
 // --- Sakura petals (decorative) -------------------------
 function spawnSakura() {
-  const container = el('div', 'sakura-container');
+  const container = mkEl('div', 'sakura-container');
   document.body.appendChild(container);
   const petals = ['🌸', '🌺', '🌼'];
   const count = 8;
   for (let i = 0; i < count; i++) {
-    const petal = el('div', 'petal');
+    const petal = mkEl('div', 'petal');
     petal.textContent = petals[Math.floor(Math.random() * petals.length)];
     petal.style.left = Math.random() * 100 + 'vw';
     petal.style.animationDuration = (8 + Math.random() * 10) + 's';
