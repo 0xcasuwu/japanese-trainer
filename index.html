@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本語トレーナー | Japanese Trainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-jp">日本語</span>
+          <span class="logo-en">Trainer</span>
+        </div>
+        <nav class="main-nav" id="mainNav">
+          <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+          <button class="nav-btn" data-view="curriculum">Curriculum</button>
+          <button class="nav-btn" data-view="flashcards">Flashcards</button>
+          <button class="nav-btn" data-view="quiz">Quiz</button>
+          <button class="nav-btn" data-view="kana">Kana Tables</button>
+          <button class="nav-btn" data-view="reference">Quick Ref</button>
+          <button class="nav-btn" data-view="cities">Cities</button>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <main id="mainContent" class="main-content"></main>
+  </div>
+  <div id="toastContainer" class="toast-container"></div>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
