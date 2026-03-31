@@ -258,14 +258,23 @@ function getPct(mastered, total) {
   return Math.round((mastered / total) * 100);
 }
 
+function shuffle(arr) {
+  // Fisher-Yates shuffle — mutates and returns arr
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 function buildDueQueue() {
   const today = getToday();
   const due = Object.values(state.cards).filter(c => {
     if (!matchesDeck(c, state.deck)) return false;
     return c.nextReview <= today;
   });
-  // Sort: overdue first, then by nextReview
-  due.sort((a, b) => a.nextReview.localeCompare(b.nextReview));
+  // Shuffle so cards appear in random order each session
+  shuffle(due);
   state.dueQueue = due.map(c => c.id);
 }
 
@@ -720,8 +729,8 @@ function pickMCOptions(correct) {
     ...HIRAGANA.map(h => h.romaji.toUpperCase()),
     ...PHRASES.map(p => p.english)
   ].filter(e => e !== correct.english);
-  const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, 3);
-  const opts = [...shuffled, correct.english].sort(() => Math.random() - 0.5);
+  const shuffled = shuffle(pool).slice(0, 3);
+  const opts = shuffle([...shuffled, correct.english]);
   return opts;
 }
 
@@ -949,21 +958,48 @@ function checkTypingAnswer(answer, q, qs) {
   navigate('quiz');
 }
 
+// Cached Japanese voice — resolved once after voices load
+let _cachedJpVoice = null;
+let _voicesReady = false;
+
+function selectBestJpVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return null;
+  // Prefer Google Japanese (Chrome ships high-quality Google voices)
+  const googleJp = voices.find(v => /ja/i.test(v.lang) && /google/i.test(v.name));
+  if (googleJp) return googleJp;
+  // Any Japanese voice
+  const anyJp = voices.find(v => v.lang === 'ja-JP' || v.lang === 'ja');
+  return anyJp || null;
+}
+
 function speakJapanese(text) {
   if (!window.speechSynthesis) {
     showToast('Speech synthesis not supported in this browser', 'error');
     return;
   }
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'ja-JP';
-  utterance.rate = 0.85;
-  utterance.pitch = 1;
-  // Prefer a Japanese voice if available
-  const voices = window.speechSynthesis.getVoices();
-  const jpVoice = voices.find(v => v.lang === 'ja-JP' || v.lang === 'ja');
-  if (jpVoice) utterance.voice = jpVoice;
-  window.speechSynthesis.speak(utterance);
+
+  const doSpeak = () => {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.85;
+    utterance.pitch = 1;
+    if (!_cachedJpVoice) _cachedJpVoice = selectBestJpVoice();
+    if (_cachedJpVoice) utterance.voice = _cachedJpVoice;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Voices may not be loaded yet on first call — wait for them
+  if (_voicesReady || window.speechSynthesis.getVoices().length > 0) {
+    _voicesReady = true;
+    doSpeak();
+  } else {
+    window.speechSynthesis.onvoiceschanged = () => {
+      _voicesReady = true;
+      doSpeak();
+    };
+  }
 }
 
 // --- KANA TABLES ----------------------------------------
