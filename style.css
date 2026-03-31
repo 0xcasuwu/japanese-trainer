@@ -1162,23 +1162,62 @@ img { display: block; max-width: 100%; }
   .main-content { padding: 20px 16px 48px; }
   .dashboard-grid { grid-template-columns: 1fr; }
   .stat-cards-row { grid-template-columns: 1fr 1fr; }
-  .dash-welcome { flex-direction: column; align-items: flex-start; }
+  .dash-welcome { flex-direction: column; align-items: flex-start; padding: 20px; }
   .welcome-cta { flex-wrap: wrap; }
   .mc-options { grid-template-columns: 1fr; }
   .rating-buttons { grid-template-columns: repeat(2, 1fr); }
-  .kana-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+
+  /* Kana table: horizontal scroll on small screens */
+  .kana-tabs { width: 100%; overflow-x: auto; }
+  .kana-grid { grid-template-columns: repeat(5, minmax(52px, 1fr)); gap: 4px; }
   .kana-cell { padding: 10px 4px; }
   .kana-char { font-size: 1.3rem; }
+
+  /* Flashcard: full width */
+  .card-scene { width: 100%; height: 240px; }
+  .card-face { padding: 20px; }
+  .flashcard-container { gap: 20px; padding: 12px 0; }
+
   .rings-row { justify-content: center; }
   .section-title { font-size: 1.4rem; }
+  .welcome-text h2 { font-size: 1.25rem; }
+
+  /* Card padding reduction */
+  .card { padding: 16px; }
+  .streak-card { padding: 16px; }
+  .rings-card { padding: 16px; }
 }
 
 @media (max-width: 480px) {
+  :root { --header-h: 56px; }
+
   .stat-cards-row { grid-template-columns: 1fr; }
   .day-card { grid-template-columns: 1fr; gap: 12px; }
   .day-badge { width: 44px; height: 44px; }
-  .quiz-card { padding: 24px 16px; }
-  .quiz-prompt { font-size: 2rem; }
+  .quiz-card { padding: 20px 12px; }
+  .quiz-prompt { font-size: 1.75rem; }
   .phrase-card { grid-template-columns: 1fr; gap: 8px; }
   .phrase-number { display: none; }
+
+  /* Further font size reductions */
+  .section-title { font-size: 1.2rem; }
+  .stat-value { font-size: 1.4rem; }
+  .streak-number { font-size: 2.25rem; }
+  .welcome-text h2 { font-size: 1.1rem; }
+  html { font-size: 15px; }
+
+  /* Flashcard smaller height */
+  .card-scene { height: 200px; }
+  .card-face { padding: 16px; }
+
+  /* Kana: allow even smaller cells */
+  .kana-grid { grid-template-columns: repeat(5, minmax(44px, 1fr)); gap: 3px; }
+  .kana-char { font-size: 1.1rem; }
+  .kana-cell { padding: 8px 2px; }
+  .kana-tab { padding: 7px 14px; font-size: 0.8rem; }
+
+  /* Reduce main content padding */
+  .main-content { padding: 14px 12px 40px; }
+  .card { padding: 12px; }
+  .dash-welcome { padding: 14px; }
 }
